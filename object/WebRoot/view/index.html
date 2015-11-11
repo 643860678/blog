@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>首页</title>
+	
+    <meta name="keywords" content="网站说明-暂无">
+    <meta name="description" content="this is My WEB">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+	
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
+  </head>
+  
+<body style="background-color: #91BDE9;font-size: 12px">
+<!-- 加载主页头部 -->
+<div id="topHtml" class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation" ></div>
+
+<div id="main" class="colorC1E0F2">
+	<div class="personshow">
+		<div class="personshow_left_div_show" align="center">
+			<img alt="个人首页" src="images/index/tx.jpg" class="myImgShow">
+		</div>
+		
+		<ol class="breadcrumb breadcrumb_move">
+  			<li><a href="#">主页</a></li>
+  			<li><a href="#">发博客</a></li>
+  			<li><a href="#">日记</a></li>
+  			<li><a href="#">相册</a></li>
+  			<li><a href="#">音乐</a></li>
+  			<li><a href="view/love/index.html">等待</a></li>
+		</ol>
+		<ol class="breadcrumb_login">
+  			<a href="register.htm">注册</a> <a href="login.htm">登录</a>
+		</ol>
+	</div>
+	
+	<div class="wrap">
+   		<div class="left"></div>
+   		<div class="middle" align="center">
+   			<textarea style="width:98%;height:110px;" placeholder="请输入留言..." id="quickmes"></textarea>
+   			<div style="width:98%;text-align: right;">
+   				<button class="btn btn-info" style="" id="quickIn">快速发表</button>
+   			</div>
+   			<div style="width:98%;text-align: left;height:88%;margin-top:7px">
+   				#foreach($!data in $!list)
+   					<div style="width:100%;height:78px;border:1px solid #ccc;margin-top:10px">
+   						<img alt="加载失败" title="陌生人" src="images/index/msr.jpg" style="width:80px;height:100%;border-radius:6px;float:left;cursor:pointer;">
+   						<div style="float:left;margin-left: 5px">$data.message</div>
+   						<div style="width:120px;height:15px;float:right;margin-top:62px">
+   							<!-- 格式化时间 -->
+   							$!date.format('yyyy-MM-dd HH:mm:ss',$!data.issuetime)
+   						</div>
+   					</div>
+   				#end
+   				<div style="float: right;"><!-- 被选中active    残废掉disabled -->
+   					<ul class="pagination">
+   					<!-- 如果当前页数为1,那么跳转到首页的功能就失效 -->
+   						#if($pageparam.current==1)
+   							<li class="disabled" title="首页"><a href="javaScript:void(0)" data="1" class="a_ty">&laquo;</a></li>
+   							#else
+   							<li title="首页"><a href="javaScript:void(0)" data="1" class="a_ty">&laquo;</a></li>
+   						#end
+  						
+  						<!-- int two=2; -->
+  						#set($two=2)
+  						#set($zx=$!{pageparam.current}-$!{two})
+  						#set($zd=$!{pageparam.current}+$!{two})
+  						#set($lastone=1)<!-- int lastone=1; -->
+  						<!-- 如果当前页数为倒数第二页或者为倒数第一页.那么补位 -->
+  						#set($thpage1=$!{pageparam.current}-$!{two}-$!{lastone})
+  						#set($thpage2=$!{pageparam.current}-$!{two}-$!{two})
+  						
+  						<!-- if总页数小于4,那么就不补位;如果小于5,那么只补一个 -->
+  						#if($pageparam.count>3)
+  							#if($pageparam.current==$!{pageparam.count}-$!{lastone}||$pageparam.current==$!{pageparam.count})
+  								#if($pageparam.current==$!{pageparam.count}&&$pageparam.count>4)
+  								<li><a href="javaScript:void(0)" data="${thpage2}" class="a_ty">$thpage2</a></li>
+  								#end
+  								#if($pageparam.count>=4)
+  								<li><a href="javaScript:void(0)" data="${thpage1}" class="a_ty">$thpage1</a></li>
+  								#end
+  							#end
+  						#end
+  						
+  						#foreach($foo in [$zx..$zd])
+  							#if($pageparam.current==$foo)
+ 				 				<li class="active"><a href="javaScript:void(0)" data="${foo}" class="a_ty">$foo</a></li>
+ 				 				#else
+ 				 				<li><a href="javaScript:void(0)" data="${foo}" class="a_ty">$foo</a></li>
+ 				 			#end
+						#end
+						
+						<!-- 如果当前页数为最后一页,那么跳转到末页的功能就失效 -->
+   						#if($pageparam.current==$pageparam.count)
+   							<li title="末页" class="disabled"><a href="javaScript:void(0)" class="a_ty" data="${pageparam.count}" id="lastpage">&raquo;</a></li>
+   							#else
+   							<li title="末页"><a href="javaScript:void(0)" class="a_ty" data="${pageparam.count}" id="lastpage">&raquo;</a></li>
+   						#end
+ 				 		
+					</ul>
+					<!-- 分页用的隐藏form -->
+					<form action="index.htm" method="post" id="pageform">
+						<input type="hidden" name="current" value="${pageparam.current}">
+					</form>
+   				</div>
+   			</div>
+   		</div>
+   		<div class="right"></div>
+   </div>
+	
+</div>
+    <script type="text/javascript">
+    	$(function (){
+    		var current=$("input[name='current']").val();
+    		var count=$("#lastpage").attr("data");
+    		var a_ty=$(".a_ty");
+    		//动态生成页码的方法
+    		paging();
+    		
+    		//当页面加载完成后加载头部页面
+    		$("#topHtml").load("view/top.html",function (){
+    			$(".nav_ba_room").click(function (){
+        			$("#main").attr("class","");
+        			$("#main").addClass($(this).attr("color"));
+        		});
+    		});
+    		//点击快速发表的时候发送post请求,之后刷新页面
+    		$("#quickIn").click(function (){
+    			$.post("savespeak.htm",{"message":$("#quickmes").val()},function (data){
+    				alert(data);
+    				$("#pageform").submit();
+    			});
+    		});
+    		//当点击跳页的页码时给隐藏域赋值.之后执行查询的操作
+    		$(".a_ty").click(function (){
+    			current=$.trim($(this).attr("data"));
+    			$("input[name='current']").val(current);
+    			$("#pageform").submit();
+    		});
+    		
+    		//动态生成页码的方法
+    		function paging(){
+    			for(var i=1;i<$(a_ty).length-1;i++){
+    				//当前页为第一页时去掉小于1的页码
+        			if($(a_ty[i]).attr("data")<=0){
+        				$(a_ty[i]).hide();
+        			}
+    				//出现的页码如果有大于总页数的...消灭掉
+        			if($(a_ty[i]).attr("data")>count){
+        				$(a_ty[i]).hide();
+        			}
+        		}
+        		//如果当前页数为1或者2
+    			if(current==1||current==2){
+    				var lastli=$(".pagination li").eq(-1);
+    				lastli.remove();
+    				if(count>=4){
+    					if(current!=2||count!=4){
+    						$(".pagination").append("<li><a href='javaScript:void(0)' data='"+(4+(current-0)-1)+"' class='a_ty'>"+(4+(current-0)-1)+"</a></li>");
+    					}
+    					if(count>=5&&current!=2){
+    						$("ul").append("<li><a href='javaScript:void(0)' data='5' class='a_ty'>5</a></li>");
+    					}
+    				}
+    				$(".pagination").append(lastli);
+    			}
+    		}
+    		
+    	});
+    </script>
+   
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
